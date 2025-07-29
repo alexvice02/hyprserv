@@ -44,7 +44,7 @@ chmod +x dev-status.sh dev-mode.sh
 
 ```json
 {
-    "hyprserv": {
+    "custom/hyprserv": {
         "format": "{icon} dev",
         "format-icons": {
             "running": "",
