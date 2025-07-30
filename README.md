@@ -25,6 +25,7 @@ It consists of two simple Bash scripts:
 - `waybar`
 - `wofi` (or `rofi`, with minor modifications)
 - `systemctl` available to the user (via sudo or user services)
+- `polkit`
 
 ---
 

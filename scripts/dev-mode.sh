@@ -1,6 +1,8 @@
 # Services list
 services=(postgresql httpd docker php memcached elasticsearch nginx redis mysql mongod postgresql rabbitmq-server mariadb)
 
+sudo
+
 # Labels and Icons
 declare -A labels=(
     [postgresql]=" PostgreSQL"
@@ -18,7 +20,7 @@ declare -A labels=(
 )
 
 # Build list of services with statuses
-options=""
+options="⏵ Start all"$'\n'"⏹ Stop all"$'\n'
 for service in "${services[@]}"; do
     if systemctl is-active --quiet "$service"; then
         status="●"
@@ -35,8 +37,20 @@ choice=$(echo "$options" | wofi --dmenu --prompt "Toggle dev service:")
 
 [[ -z "$choice" ]] && exit 0
 
-# Get service name
-# Example: '●   PostgreSQL (postgresql.service)' → 'postgresql.service'
+# Handle start all / stop all
+if [[ "$choice" == "⏵ Start all" ]]; then
+    for service in "${services[@]}"; do
+        systemctl start "$service"
+    done
+    exit 0
+elif [[ "$choice" == "⏹ Stop all" ]]; then
+    for service in "${services[@]}"; do
+        systemctl stop "$service"
+    done
+    exit 0
+fi
+
+# Get service name from choice
 service=$(echo "$choice" | grep -oP '\(([^)]+)\)' | tr -d '()')
 
 # Toggle service
