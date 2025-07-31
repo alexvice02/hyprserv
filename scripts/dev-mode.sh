@@ -1,7 +1,5 @@
 # Services list
-services=(postgresql httpd docker php memcached elasticsearch nginx redis mysql mongod postgresql rabbitmq-server mariadb)
-
-sudo
+services=(postgresql httpd docker php memcached elasticsearch nginx redis mysql mongod rabbitmq-server mariadb)
 
 # Labels and Icons
 declare -A labels=(
@@ -33,8 +31,18 @@ for service in "${services[@]}"; do
 done
 
 # User choice
-choice=$(echo "$options" | wofi --dmenu --prompt "Toggle dev service:")
-
+if command -v rofi >/dev/null 2>&1; then
+    if rofi -v | grep -q "wayland"; then
+        choice=$(echo "$options" | rofi -show -dmenu -prompt "Toggle dev service:")
+    else
+        choice=$(echo "$options" | rofi -dmenu -p "Toggle dev service:")
+    fi
+elif command -v wofi >/dev/null 2>&1; then
+    choice=$(echo "$options" | wofi --dmenu --prompt "Toggle dev service:")
+else
+    echo "Neither rofi nor wofi is installed."
+    exit 1
+fi
 [[ -z "$choice" ]] && exit 0
 
 # Handle start all / stop all
