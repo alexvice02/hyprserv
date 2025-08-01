@@ -2,9 +2,10 @@
 
 **HyprServ** is a minimalistic tool for developers using Linux (especially with Wayland + Waybar + Hyprland) to monitor and manage local development services directly from your status bar.
 
-It consists of two simple Bash scripts:
+It consists of three Bash scripts:
 - `dev-status.sh`: displays the current status of selected services (used in Waybar widget)
-- `dev-mode.sh`: interactive toggle menu to start/stop services via Wofi
+- `dev-menu.sh`: interactive toggle menu to start/stop services via Rofi | Wofi
+- `dev-action.sh`: script for starting/stopping services via `systemctl`
 
 ---
 
@@ -23,9 +24,9 @@ It consists of two simple Bash scripts:
 - Linux with `systemd`
 - Bash
 - `waybar`
-- `wofi` (or `rofi`, with minor modifications)
+- `rofi` or `wofi`
 - `systemctl` available to the user (via sudo or user services)
-- `polkit`
+- `polkit` for sudo
 
 ---
 
@@ -53,7 +54,7 @@ chmod +x dev-status.sh dev-mode.sh
             "stopped": "\uF120"
         },
         "interval": 5,
-        "on-click": "/path/to/dev-mode.sh",
+        "on-click": "/path/to/dev-menu.sh",
         "exec": "/path/to/dev-status.sh",
         "tooltip": true,
         "return-type": "json"
