@@ -37,7 +37,7 @@ It consists of three Bash scripts:
 ```bash
 git clone https://github.com/alexvice02/hyprserv.git
 cd hyprserv/scripts
-chmod +x dev-status.sh dev-mode.sh
+chmod +x dev-status.sh dev-action.sh dev-menu.sh
 ```
 
 2. Copy the scripts somewhere in your $PATH or reference them directly from Waybar config.
