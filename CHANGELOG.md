@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Status script now declares bash explicitly instead of relying on /bin/sh being bash
+- Bulk start/stop no longer stops at the first service that fails
+
 ## [0.1.0] - 2025-07-29
 
 ### Added

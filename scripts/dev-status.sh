@@ -1,10 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
 services=(postgresql httpd docker.service)
 
 running=0
 
 for service in "${services[@]}"; do
     if systemctl is-active --quiet "$service"; then
-        ((running++))
+        running=$(( running + 1 ))
     fi
 done
 

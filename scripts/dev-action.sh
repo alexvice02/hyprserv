@@ -1,16 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 services=(postgresql httpd docker php memcached elasticsearch nginx redis mysql mongod rabbitmq-server mariadb)
 
-case "$1" in
+case "${1:-}" in
     start_all)
         for s in "${services[@]}"; do
-            systemctl start "$s"
+            systemctl start -- "$s" || echo "failed to start: $s" >&2
         done
         ;;
     stop_all)
         for s in "${services[@]}"; do
-            systemctl stop "$s"
+            systemctl stop -- "$s" || echo "failed to stop: $s" >&2
         done
         ;;
     toggle:*)
@@ -22,7 +23,7 @@ case "$1" in
         fi
         ;;
     *)
-        echo "❌ Unknown command: $1"
+        echo "❌ Unknown command: ${1:-}"
         exit 1
         ;;
 esac
