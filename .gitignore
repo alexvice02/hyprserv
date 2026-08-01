@@ -1,1 +1,13 @@
-.idea
+# JetBrains
+.idea/
+
+# Editors
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+
+# Local overrides
+*.local
