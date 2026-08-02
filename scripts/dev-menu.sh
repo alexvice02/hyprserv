@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+HYPRSERV_ROOT=${HYPRSERV_ROOT:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)}
+# shellcheck source=../lib/common.sh
+source "$HYPRSERV_ROOT/lib/common.sh"
+
 services=(postgresql httpd docker php memcached elasticsearch nginx redis mysql mongod rabbitmq-server mariadb)
 
 declare -A labels=(
@@ -33,8 +37,7 @@ if command -v wofi >/dev/null 2>&1; then
 elif command -v rofi >/dev/null 2>&1; then
     choice=$(echo "$options" | rofi -dmenu -p "Toggle service:")
 else
-    echo "❗ wofi or rofi is required"
-    exit 1
+    hs_die "wofi or rofi is required"
 fi
 
 
@@ -51,4 +54,4 @@ else
 fi
 
 
-pkexec /path/to/scripts/dev-action.sh "$action"
+pkexec "$HYPRSERV_ROOT/scripts/dev-action.sh" "$action"

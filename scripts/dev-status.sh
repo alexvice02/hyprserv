@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+HYPRSERV_ROOT=${HYPRSERV_ROOT:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)}
+# shellcheck source=../lib/common.sh
+source "$HYPRSERV_ROOT/lib/common.sh"
+
 services=(postgresql httpd docker.service)
 
 running=0

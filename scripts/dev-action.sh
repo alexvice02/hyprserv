@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+HYPRSERV_ROOT=${HYPRSERV_ROOT:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)}
+# shellcheck source=../lib/common.sh
+source "$HYPRSERV_ROOT/lib/common.sh"
+
 services=(postgresql httpd docker php memcached elasticsearch nginx redis mysql mongod rabbitmq-server mariadb)
 
 case "${1:-}" in
@@ -23,7 +27,6 @@ case "${1:-}" in
         fi
         ;;
     *)
-        echo "❌ Unknown command: ${1:-}"
-        exit 1
+        hs_die "unknown command: ${1:-<none>}"
         ;;
 esac
