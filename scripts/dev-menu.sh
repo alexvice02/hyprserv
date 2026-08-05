@@ -5,30 +5,13 @@ HYPRSERV_ROOT=${HYPRSERV_ROOT:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." &&
 # shellcheck source=../lib/common.sh
 source "$HYPRSERV_ROOT/lib/common.sh"
 
-services=(postgresql httpd docker php memcached elasticsearch nginx redis mysql mongod rabbitmq-server mariadb)
-
-declare -A labels=(
-    [postgresql]=" PostgreSQL"
-    [httpd]=" Apache"
-    [docker]=" Docker"
-    [php]=" PHP"
-    [memcached]="󰍛 Memcached"
-    [elasticsearch]=" Elasticsearch"
-    [nginx]=" Nginx"
-    [redis]=" Redis"
-    [mysql]=" MySQL"
-    [mongod]=" MongoDB"
-    [rabbitmq-server]=" RabbitMQ"
-    [mariadb]=" MariaDB"
-)
-
+hs_load_services
 
 options="⏵ Start all"$'\n'"⏹ Stop all"$'\n'
 
-for service in "${services[@]}"; do
-    status=$(systemctl is-active --quiet "$service" && echo "●" || echo "○")
-    label="${labels[$service]:-$service}"
-    options+="$label ($service) $status"$'\n'
+for unit in "${HS_UNITS[@]}"; do
+    status=$(systemctl is-active --quiet -- "$unit" && echo "●" || echo "○")
+    options+="$(hs_display_name "$unit") ($unit) $status"$'\n'
 done
 
 

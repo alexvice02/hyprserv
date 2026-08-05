@@ -12,11 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Waybar status now reads its service list from `config/services.conf`
+- Menu and action scripts read their service list from `config/services.conf`
 
 ### Fixed
 - Status script now declares bash explicitly instead of relying on /bin/sh being bash
 - Bulk start/stop no longer stops at the first service that fails
 - Scripts locate each other automatically; no more editing a hardcoded path after cloning
+
+### Security
+- The privileged action script now only operates on services declared in the registry
 
 ## [0.1.0] - 2025-07-29
 

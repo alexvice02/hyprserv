@@ -5,28 +5,32 @@ HYPRSERV_ROOT=${HYPRSERV_ROOT:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." &&
 # shellcheck source=../lib/common.sh
 source "$HYPRSERV_ROOT/lib/common.sh"
 
-services=(postgresql httpd docker php memcached elasticsearch nginx redis mysql mongod rabbitmq-server mariadb)
+hs_load_services
 
-case "${1:-}" in
+(( $# == 1 )) || hs_die "expected exactly one action argument, got $#"
+
+case "$1" in
     start_all)
-        for s in "${services[@]}"; do
-            systemctl start -- "$s" || echo "failed to start: $s" >&2
+        for unit in "${HS_UNITS[@]}"; do
+            systemctl start -- "$unit" || hs_warn "failed to start: $unit"
         done
         ;;
     stop_all)
-        for s in "${services[@]}"; do
-            systemctl stop -- "$s" || echo "failed to stop: $s" >&2
+        for unit in "${HS_UNITS[@]}"; do
+            systemctl stop -- "$unit" || hs_warn "failed to stop: $unit"
         done
         ;;
     toggle:*)
-        svc="${1#toggle:}"
-        if systemctl is-active --quiet "$svc"; then
-            systemctl stop "$svc"
+        unit=${1#toggle:}
+        hs_is_known_unit "$unit" \
+            || hs_die "refusing to act on unit outside the registry: $unit"
+        if systemctl is-active --quiet -- "$unit"; then
+            systemctl stop -- "$unit"
         else
-            systemctl start "$svc"
+            systemctl start -- "$unit"
         fi
         ;;
     *)
-        hs_die "unknown command: ${1:-<none>}"
+        hs_die "unknown command: $1"
         ;;
 esac
