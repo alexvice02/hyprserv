@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Service registry at `config/services.conf` defining each service's unit, icon and label in one place
 
+### Changed
+- Waybar status now reads its service list from `config/services.conf`
+
 ### Fixed
 - Status script now declares bash explicitly instead of relying on /bin/sh being bash
 - Bulk start/stop no longer stops at the first service that fails
