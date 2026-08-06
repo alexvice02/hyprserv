@@ -5,7 +5,7 @@ HYPRSERV_ROOT=${HYPRSERV_ROOT:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." &&
 # shellcheck source=../lib/common.sh
 source "$HYPRSERV_ROOT/lib/common.sh"
 
-hs_load_services
+hs_load_services "$(hs_system_config_file)"
 
 (( $# == 1 )) || hs_die "expected exactly one action argument, got $#"
 

@@ -92,3 +92,24 @@ chmod +x dev-status.sh dev-action.sh dev-menu.sh
 ```
 bind = SUPER + F5, exec, ~/path/to/dev-mode.sh
 ```
+
+---
+
+## ⚙️ Configuration
+
+Services are declared in `config/services.conf`:
+
+    # unit | icon | label | tracked
+    postgresql | <glyph> | PostgreSQL | yes
+
+`tracked = yes` means the service counts toward the bar's running / partial / stopped
+state. Untracked services still appear in the menu.
+
+To customise without touching the repo, copy it to
+`~/.config/hyprserv/services.conf` — that file wins if present.
+
+**One caveat:** the privileged action script deliberately ignores your personal config
+and reads only `/etc/hyprserv/services.conf` (or the bundled default). Root should not
+take its list of what-it-may-touch from a file inside `$HOME`. So a service you add
+*only* to your user config will show in the menu but be refused when you click it. To
+make it actionable, add it to the system config as well.

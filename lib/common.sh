@@ -26,17 +26,43 @@ hs_trim() {
     printf '%s' "$s"
 }
 
-# Path to the service registry.
+# Registry path, in precedence order:
+#   $HYPRSERV_CONFIG        explicit override (tests, one-off runs)
+#   $XDG_CONFIG_HOME/...    per-user override
+#   /etc/hyprserv/...       system-wide
+#   <root>/config/...       bundled default
+#
+# Not used by the privileged action script — see hs_system_config_file.
 hs_config_file() {
-    printf '%s' "${HYPRSERV_CONFIG:-$(hs_root)/config/services.conf}"
+    local xdg=${XDG_CONFIG_HOME:-${HOME:-}/.config}
+
+    if [[ -n ${HYPRSERV_CONFIG:-} ]]; then
+        printf '%s' "$HYPRSERV_CONFIG"
+    elif [[ -r $xdg/hyprserv/services.conf ]]; then
+        printf '%s' "$xdg/hyprserv/services.conf"
+    elif [[ -r /etc/hyprserv/services.conf ]]; then
+        printf '%s' /etc/hyprserv/services.conf
+    else
+        printf '%s' "$(hs_root)/config/services.conf"
+    fi
+}
+
+# Registry path for the privileged path. Never resolves into a user-writable
+# location, so a compromised or careless $HOME cannot widen what root will act on.
+hs_system_config_file() {
+    if [[ -r /etc/hyprserv/services.conf ]]; then
+        printf '%s' /etc/hyprserv/services.conf
+    else
+        printf '%s' "$(hs_root)/config/services.conf"
+    fi
 }
 
 # Populate HS_UNITS (ordered) and the HS_ICON / HS_LABEL / HS_TRACKED maps.
 # Safe to call more than once.
 hs_load_services() {
-    local file line unit icon label tracked
+    local file=${1:-$(hs_config_file)}
+    local line unit icon label tracked
 
-    file=$(hs_config_file)
     [[ -r $file ]] || hs_die "cannot read service registry: $file"
 
     HS_UNITS=()
