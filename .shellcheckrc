@@ -1,0 +1,9 @@
+# Follow sourced files.
+external-sources=true
+
+# The `source=` directives are written relative to the sourcing script, so resolve
+# them against its directory rather than whatever cwd shellcheck was invoked from.
+source-path=SCRIPTDIR
+
+# lib/common.sh is sourced, so its functions and HS_* globals are used elsewhere.
+disable=SC2034
