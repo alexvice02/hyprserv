@@ -1,6 +1,7 @@
 SHELL := /bin/bash
 SCRIPTS := $(wildcard scripts/*.sh)
 LIBS := $(wildcard lib/*.sh)
+TESTS := $(wildcard tests/*.bash) tests/run.sh tests/stub/systemctl
 
 .PHONY: help lint test check
 
@@ -10,9 +11,9 @@ help:
 	@echo "make check  - lint + test"
 
 lint:
-	shellcheck -x $(SCRIPTS) $(LIBS)
+	shellcheck -x $(SCRIPTS) $(LIBS) $(TESTS)
 
 test:
-	@echo "no tests yet - added on Day 09"
+	@bash tests/run.sh
 
 check: lint test

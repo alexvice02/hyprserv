@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# Test double for systemctl.
+#
+#   HS_TEST_ACTIVE  space-separated units to report as active
+#   HS_TEST_KNOWN   space-separated units to report as installed
+#                   (defaults to HS_TEST_ACTIVE plus anything in the registry)
+#   HS_TEST_LOG     file to append invocations to, one per line
+set -euo pipefail
+
+[[ -n ${HS_TEST_LOG:-} ]] && printf '%s\n' "$*" >>"$HS_TEST_LOG"
+
+verb=${1:-}
+shift || true
+# drop flags and the -- separator
+args=()
+for a in "$@"; do
+    [[ $a == -* ]] && continue
+    args+=("$a")
+done
+unit=${args[0]:-}
+
+in_list() {
+    local needle=$1 list=${2:-} item
+    for item in $list; do
+        [[ $item == "$needle" || $item == "$needle.service" || "$item.service" == "$needle" ]] && return 0
+    done
+    return 1
+}
+
+case $verb in
+    is-active) in_list "$unit" "${HS_TEST_ACTIVE:-}" && { echo active; exit 0; }
+               echo inactive; exit 3 ;;
+    cat)       in_list "$unit" "${HS_TEST_KNOWN:-${HS_TEST_ACTIVE:-}}" && exit 0
+               echo "No files found for $unit." >&2; exit 1 ;;
+    start|stop|restart) in_list "$unit" "${HS_TEST_KNOWN:-${HS_TEST_ACTIVE:-}}" && exit 0
+               echo "Failed to $verb $unit: Unit $unit not found." >&2; exit 5 ;;
+    *)         echo "stub systemctl: unhandled verb: $verb" >&2; exit 64 ;;
+esac
