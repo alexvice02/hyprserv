@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Status script now declares bash explicitly instead of relying on /bin/sh being bash
 - Bulk start/stop no longer stops at the first service that fails
 - Scripts locate each other automatically; no more editing a hardcoded path after cloning
+- Service names containing quotes or backslashes no longer produce invalid Waybar output
 
 ### Security
 - The privileged action script now only operates on services declared in the registry

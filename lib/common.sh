@@ -100,3 +100,24 @@ hs_display_name() {
     [[ -n $label ]] || label=$unit
     [[ -n $icon ]] && printf '%s %s' "$icon" "$label" || printf '%s' "$label"
 }
+
+# Escape $1 for use inside a JSON string literal.
+# Control characters below 0x20 other than \n \r \t are not handled: they
+# cannot occur in a service label typed by hand, so the loop isn't worth it.
+hs_json_escape() {
+    local s=$1
+    s=${s//\\/\\\\}       # backslash first, or it double-escapes the others
+    s=${s//\"/\\\"}
+    s=${s//$'\n'/\\n}
+    s=${s//$'\r'/\\r}
+    s=${s//$'\t'/\\t}
+    printf '%s' "$s"
+}
+
+# Emit the Waybar module object. $1 state, $2 tooltip.
+# The state is used for both "alt" (icon lookup) and "class" (CSS) — they must agree.
+hs_emit_waybar_json() {
+    local state=$1 tooltip=$2
+    printf '{"alt": "%s", "tooltip": "%s", "class": "%s"}\n' \
+        "$state" "$(hs_json_escape "$tooltip")" "$state"
+}

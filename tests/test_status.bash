@@ -63,3 +63,18 @@ for active in "alpha beta gamma" "alpha" ""; do
     class=$(sed -n 's/.*"class": "\([a-z]*\)".*/\1/p' <<<"$out")
     assert_eq "alt matches class for [$active]" "$alt" "$class"
 done
+
+# --- a label with a quote still yields valid JSON ---------------------------
+# tracked=no, matching the untracked-registry workaround above: the stub's
+# is-active doesn't honour --quiet, so a tracked unit would leak "active" onto
+# stdout ahead of the JSON and break this check for a reason unrelated to
+# escaping (the same Day 09 stub gap Day 10 worked around).
+make_registry "$tmp/nasty.conf" <<'EOF'
+alpha | A | He said "hi" | no
+EOF
+out=$(HYPRSERV_CONFIG=$tmp/nasty.conf HS_TEST_ACTIVE=alpha \
+        bash "$HYPRSERV_ROOT/scripts/dev-status.sh")
+if command -v jq >/dev/null; then
+    assert_status "quote in a label still yields valid JSON" 0 \
+        bash -c "printf '%s' '$out' | jq -e ."
+fi

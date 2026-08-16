@@ -22,3 +22,10 @@ assert_eq "unknown unit falls back to unit name" "gamma" "$(hs_display_name gamm
 
 if hs_is_known_unit alpha; then hs_t_ok "known unit accepted"; else hs_t_fail "known unit accepted"; fi
 if hs_is_known_unit nope; then hs_t_fail "unknown unit rejected"; else hs_t_ok "unknown unit rejected"; fi
+
+assert_eq "escapes double quotes"  'say \"hi\"'  "$(hs_json_escape 'say "hi"')"
+assert_eq "escapes backslashes"    'a\\\\b'      "$(hs_json_escape 'a\\b')"
+assert_eq "backslash before quote" '\\\\\"'      "$(hs_json_escape '\\"')"
+assert_eq "escapes newlines"       'a\nb'        "$(hs_json_escape $'a\nb')"
+assert_eq "escapes tabs"           'a\tb'        "$(hs_json_escape $'a\tb')"
+assert_eq "leaves plain text alone" 'PostgreSQL' "$(hs_json_escape 'PostgreSQL')"

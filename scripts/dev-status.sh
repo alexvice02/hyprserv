@@ -19,12 +19,11 @@ for unit in "${HS_UNITS[@]}"; do
 done
 
 if (( total == 0 )); then
-    printf '%s\n' '{"alt": "stopped", "tooltip": "No services tracked", "class": "stopped"}'
+    hs_emit_waybar_json stopped "No services tracked"
 elif (( running == total )); then
-    printf '%s\n' '{"alt": "running", "tooltip": "All dev services running", "class": "running"}'
+    hs_emit_waybar_json running "All dev services running"
 elif (( running == 0 )); then
-    printf '%s\n' '{"alt": "stopped", "tooltip": "All dev services stopped", "class": "stopped"}'
+    hs_emit_waybar_json stopped "All dev services stopped"
 else
-    printf '{"alt": "partial", "tooltip": "%s of %s services running", "class": "partial"}\n' \
-        "$running" "$total"
+    hs_emit_waybar_json partial "$running of $total services running"
 fi
