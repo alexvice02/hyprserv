@@ -27,6 +27,13 @@ assert_contains "none active -> stopped class" '"class": "stopped"' "$out"
 out=$(status "alpha")
 assert_contains "some active -> partial class" '"class": "partial"' "$out"
 assert_contains "partial tooltip counts tracked only" '1 of 3 services running' "$out"
+assert_contains "tooltip lists the running service"  '● A Alpha' "$out"
+assert_contains "tooltip lists the stopped service"  '○ B Beta'  "$out"
+assert_contains "tooltip uses escaped newlines"      '\n'        "$out"
+
+out=$(status "alpha beta gamma delta")
+assert_eq "untracked units stay out of the tooltip" "" \
+    "$(grep -o 'Delta' <<<"$out" || true)"
 
 # --- untracked units do not move the needle ---------------------------------
 out=$(status "alpha beta gamma delta")

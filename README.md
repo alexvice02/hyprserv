@@ -16,6 +16,7 @@ It consists of three Bash scripts:
 - 🖥️ Designed for integration with Waybar on Hyprland (but works with any systemd-based distro)
 - ⚡ Lightweight — pure Bash with no external dependencies except systemd & dmenu/wofi
 - 💡 Easily extendable with custom services, labels, and icons
+- 🔍 Tooltip breaks down which tracked services are up and which are down
 
 ---
 

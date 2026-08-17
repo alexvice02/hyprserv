@@ -10,10 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Service registry at `config/services.conf` defining each service's unit, icon and label in one place
 - Per-user service registry at `~/.config/hyprserv/services.conf`, overriding the bundled one
+- Tooltip lists each tracked service and whether it is running
 
 ### Changed
 - Waybar status now reads its service list from `config/services.conf`
 - Menu and action scripts read their service list from `config/services.conf`
+- Tooltip summary now names the service count ("All 3 services running")
 
 ### Fixed
 - Status script now declares bash explicitly instead of relying on /bin/sh being bash
