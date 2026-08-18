@@ -101,6 +101,18 @@ hs_display_name() {
     [[ -n $icon ]] && printf '%s %s' "$icon" "$label" || printf '%s' "$label"
 }
 
+# Print one of: active | inactive | missing
+hs_unit_state() {
+    local unit=$1
+    if ! systemctl cat -- "$unit" >/dev/null 2>&1; then
+        printf 'missing'
+    elif systemctl is-active --quiet -- "$unit" >/dev/null 2>&1; then
+        printf 'active'
+    else
+        printf 'inactive'
+    fi
+}
+
 # Escape $1 for use inside a JSON string literal.
 # Control characters below 0x20 other than \n \r \t are not handled: they
 # cannot occur in a service label typed by hand, so the loop isn't worth it.

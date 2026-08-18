@@ -114,3 +114,7 @@ and reads only `/etc/hyprserv/services.conf` (or the bundled default). Root shou
 take its list of what-it-may-touch from a file inside `$HOME`. So a service you add
 *only* to your user config will show in the menu but be refused when you click it. To
 make it actionable, add it to the system config as well.
+
+Services listed in the registry but not installed on the machine are shown in the
+tooltip as `· Name (not installed)` and excluded from the running/stopped count, so a
+generous default registry doesn't leave the bar permanently amber.

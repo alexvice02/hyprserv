@@ -10,8 +10,12 @@ hs_load_services
 options="⏵ Start all"$'\n'"⏹ Stop all"$'\n'
 
 for unit in "${HS_UNITS[@]}"; do
-    status=$(systemctl is-active --quiet -- "$unit" && echo "●" || echo "○")
-    options+="$(hs_display_name "$unit") ($unit) $status"$'\n'
+    case "$(hs_unit_state "$unit")" in
+        active)   mark="●" ;;
+        inactive) mark="○" ;;
+        missing)  mark="·" ;;
+    esac
+    options+="$(hs_display_name "$unit") ($unit) $mark"$'\n'
 done
 
 

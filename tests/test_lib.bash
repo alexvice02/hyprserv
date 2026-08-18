@@ -29,3 +29,8 @@ assert_eq "backslash before quote" '\\\\\"'      "$(hs_json_escape '\\"')"
 assert_eq "escapes newlines"       'a\nb'        "$(hs_json_escape $'a\nb')"
 assert_eq "escapes tabs"           'a\tb'        "$(hs_json_escape $'a\tb')"
 assert_eq "leaves plain text alone" 'PostgreSQL' "$(hs_json_escape 'PostgreSQL')"
+
+export HS_TEST_KNOWN="alpha beta" HS_TEST_ACTIVE="alpha"
+assert_eq "installed and running" "active"   "$(hs_unit_state alpha)"
+assert_eq "installed, not running" "inactive" "$(hs_unit_state beta)"
+assert_eq "not installed"          "missing"  "$(hs_unit_state gamma)"

@@ -12,7 +12,7 @@ delta | D | Delta | no
 EOF
 
 status() {
-    HYPRSERV_CONFIG=$tmp/three.conf HS_TEST_ACTIVE=$1 \
+    HYPRSERV_CONFIG=$tmp/three.conf HS_TEST_ACTIVE=$1 HS_TEST_KNOWN="alpha beta gamma delta" \
         bash "$HYPRSERV_ROOT/scripts/dev-status.sh"
 }
 
@@ -41,6 +41,18 @@ assert_contains "untracked active unit does not break running" '"class": "runnin
 
 out=$(status "delta")
 assert_contains "untracked-only active reads as stopped" '"class": "stopped"' "$out"
+
+# --- missing (not installed) units -------------------------------------------
+out=$(HYPRSERV_CONFIG=$tmp/three.conf HS_TEST_KNOWN="alpha beta" HS_TEST_ACTIVE="alpha" \
+        bash "$HYPRSERV_ROOT/scripts/dev-status.sh")
+assert_contains "missing unit excluded from the count" '1 of 2 services running' "$out"
+assert_contains "missing unit still listed"            'not installed'           "$out"
+assert_contains "state is still one of the three"      '"class": "partial"'      "$out"
+
+out=$(HYPRSERV_CONFIG=$tmp/three.conf HS_TEST_KNOWN="" HS_TEST_ACTIVE="" \
+        bash "$HYPRSERV_ROOT/scripts/dev-status.sh")
+assert_contains "nothing installed reads as stopped" '"class": "stopped"' "$out"
+assert_contains "and says so"  'No tracked services installed' "$out"
 
 # --- shape ------------------------------------------------------------------
 # The systemctl test double doesn't honour --quiet the way the real binary

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Waybar status now reads its service list from `config/services.conf`
 - Menu and action scripts read their service list from `config/services.conf`
 - Tooltip summary now names the service count ("All 3 services running")
+- Services that are not installed no longer count as stopped; they are listed separately in the tooltip
 
 ### Fixed
 - Status script now declares bash explicitly instead of relying on /bin/sh being bash
