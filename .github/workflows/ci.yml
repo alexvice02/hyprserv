@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      - name: Report bash version
+        run: bash --version
+
+      - name: Lint
+        run: make lint
+
+      - name: Test
+        run: make test
+
+      - name: Assert no real systemctl was called
+        run: |
+          # The suite must pass without touching systemd. The runner has systemd,
+          # so a test that escaped the stub would silently succeed here — this
+          # makes that impossible.
+          sudo mv /usr/bin/systemctl /usr/bin/systemctl.disabled || true
+          make test

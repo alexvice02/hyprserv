@@ -5,6 +5,7 @@ set -euo pipefail
 HYPRSERV_ROOT=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 export HYPRSERV_ROOT
 export PATH="$HYPRSERV_ROOT/tests/stub:$PATH"
+export XDG_CONFIG_HOME="$HYPRSERV_ROOT/tests/.xdg-empty"
 
 total=0
 failed=0

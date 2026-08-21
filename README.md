@@ -1,5 +1,7 @@
 # HyprServ
 
+[![CI](https://github.com/alexvice02/hyprserv/actions/workflows/ci.yml/badge.svg)](https://github.com/alexvice02/hyprserv/actions/workflows/ci.yml)
+
 **HyprServ** is a minimalistic tool for developers using Linux (especially with Wayland + Waybar + Hyprland) to monitor and manage local development services directly from your status bar.
 
 It consists of three Bash scripts:
