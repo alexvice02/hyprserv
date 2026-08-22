@@ -15,6 +15,7 @@ It consists of three Bash scripts:
 
 - ✅ Show real-time status of essential development services (e.g. Docker, PostgreSQL, Apache)
 - 🔄 Start/stop services from a convenient dmenu/wofi popup
+- ⟳ Restart a single service, or every service that is currently running
 - 🖥️ Designed for integration with Waybar on Hyprland (but works with any systemd-based distro)
 - ⚡ Lightweight — pure Bash with no external dependencies except systemd & dmenu/wofi
 - 💡 Easily extendable with custom services, labels, and icons

@@ -58,3 +58,20 @@ assert_contains "stop_all stops every unit" "stop -- mariadb" "$(cat "$tmp/calls
 HS_TEST_KNOWN="mariadb" HS_TEST_LOG=$tmp/calls.log \
     bash "$HYPRSERV_ROOT/scripts/dev-action.sh" start_all >/dev/null 2>&1 || true
 assert_contains "bulk start continues past a failing unit" "start -- mariadb" "$(cat "$tmp/calls.log")"
+
+# --- restart ------------------------------------------------------------
+: >"$tmp/calls.log"
+HS_ACTIVE="docker" action restart:docker
+assert_contains "restart calls systemctl restart" "restart -- docker" "$(cat "$tmp/calls.log")"
+
+assert_status "restart honours the allowlist" 1 action restart:not-in-registry
+
+: >"$tmp/calls.log"
+action restart:not-in-registry >/dev/null 2>&1 || true
+assert_eq "refused restart never reaches systemctl" "" "$(cat "$tmp/calls.log")"
+
+: >"$tmp/calls.log"
+HS_ACTIVE="docker" action restart_all
+log=$(cat "$tmp/calls.log")
+assert_contains "restart_all restarts a running unit" "restart -- docker" "$log"
+assert_eq "restart_all skips a stopped unit" "" "$(grep -o 'restart -- redis' <<<"$log" || true)"

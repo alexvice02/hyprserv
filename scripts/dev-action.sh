@@ -30,6 +30,18 @@ case "$1" in
             systemctl start -- "$unit"
         fi
         ;;
+    restart:*)
+        unit=${1#restart:}
+        hs_is_known_unit "$unit" \
+            || hs_die "refusing to act on unit outside the registry: $unit"
+        systemctl restart -- "$unit"
+        ;;
+    restart_all)
+        for unit in "${HS_UNITS[@]}"; do
+            [[ $(hs_unit_state "$unit") == active ]] || continue
+            systemctl restart -- "$unit" || hs_warn "failed to restart: $unit"
+        done
+        ;;
     *)
         hs_die "unknown command: $1"
         ;;

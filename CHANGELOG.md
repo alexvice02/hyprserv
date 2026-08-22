@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Service registry at `config/services.conf` defining each service's unit, icon and label in one place
 - Per-user service registry at `~/.config/hyprserv/services.conf`, overriding the bundled one
 - Tooltip lists each tracked service and whether it is running
+- Restart a single service or all running services from the menu
 
 ### Changed
 - Waybar status now reads its service list from `config/services.conf`
