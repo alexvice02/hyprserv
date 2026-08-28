@@ -34,3 +34,8 @@ export HS_TEST_KNOWN="alpha beta" HS_TEST_ACTIVE="alpha"
 assert_eq "installed and running" "active"   "$(hs_unit_state alpha)"
 assert_eq "installed, not running" "inactive" "$(hs_unit_state beta)"
 assert_eq "not installed"          "missing"  "$(hs_unit_state gamma)"
+
+assert_eq "describes bulk start"   "Start all services"  "$(hs_describe_action start_all)"
+assert_eq "describes a toggle"     "Toggle A Alpha"      "$(hs_describe_action toggle:alpha)"
+assert_eq "describes a restart"    "Restart A Alpha"     "$(hs_describe_action restart:alpha)"
+assert_eq "unknown action passes through" "weird"        "$(hs_describe_action weird)"

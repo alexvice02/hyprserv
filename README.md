@@ -31,6 +31,7 @@ It consists of three Bash scripts:
 - `rofi` or `wofi`
 - `systemctl` available to the user (via sudo or user services)
 - `polkit` for sudo
+- `libnotify` (optional) — for desktop notifications after an action
 
 ---
 
@@ -58,6 +59,7 @@ chmod +x dev-status.sh dev-action.sh dev-menu.sh
             "stopped": "\uF120"
         },
         "interval": 5,
+        "signal": 8,
         "on-click": "/path/to/dev-menu.sh",
         "exec": "/path/to/dev-status.sh",
         "tooltip": true,
@@ -65,6 +67,10 @@ chmod +x dev-status.sh dev-action.sh dev-menu.sh
     }
 }
 ```
+
+`"signal": 8` lets the menu refresh the module the instant an action completes instead
+of waiting out the 5-second interval. Without it everything still works — you just wait
+for the next poll.
 
 4. Add styles
 

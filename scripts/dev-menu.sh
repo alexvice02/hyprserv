@@ -62,4 +62,10 @@ else
 fi
 
 
-pkexec "$HYPRSERV_ROOT/scripts/dev-action.sh" "$action"
+rc=0
+output=$(pkexec "$HYPRSERV_ROOT/scripts/dev-action.sh" "$action" 2>&1) || rc=$?
+
+hs_notify_result "$action" "$rc" "$output"
+hs_refresh_waybar
+
+exit "$rc"

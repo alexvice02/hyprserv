@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Per-user service registry at `~/.config/hyprserv/services.conf`, overriding the bundled one
 - Tooltip lists each tracked service and whether it is running
 - Restart a single service or all running services from the menu
+- Desktop notification reporting whether an action succeeded, was cancelled, or failed
+- Bar refreshes immediately after an action when the module sets `"signal": 8`
 
 ### Changed
 - Waybar status now reads its service list from `config/services.conf`

@@ -133,3 +133,43 @@ hs_emit_waybar_json() {
     printf '{"alt": "%s", "tooltip": "%s", "class": "%s"}\n' \
         "$state" "$(hs_json_escape "$tooltip")" "$state"
 }
+
+# Human-readable description of an action string.
+hs_describe_action() {
+    case $1 in
+        start_all)   printf 'Start all services' ;;
+        stop_all)    printf 'Stop all services' ;;
+        restart_all) printf 'Restart running services' ;;
+        toggle:*)    printf 'Toggle %s' "$(hs_display_name "${1#toggle:}")" ;;
+        restart:*)   printf 'Restart %s' "$(hs_display_name "${1#restart:}")" ;;
+        *)           printf '%s' "$1" ;;
+    esac
+}
+
+# Desktop notification for the outcome of an action.
+# $1 action string, $2 exit status, $3 captured output.
+hs_notify_result() {
+    local action=$1 rc=$2 output=$3 what
+    command -v notify-send >/dev/null 2>&1 || return 0
+
+    what=$(hs_describe_action "$action")
+
+    if (( rc == 0 )); then
+        notify-send --app-name=HyprServ --icon=emblem-default \
+            --expire-time=2000 "HyprServ" "$what — done"
+    elif (( rc == 126 || rc == 127 )); then
+        # pkexec's own codes: authorisation dismissed or not authorised.
+        notify-send --app-name=HyprServ --icon=dialog-information \
+            --expire-time=2000 "HyprServ" "$what — cancelled"
+    else
+        notify-send --app-name=HyprServ --icon=dialog-error --urgency=critical \
+            "HyprServ" "$what — failed"$'\n'"${output:-exit status $rc}"
+    fi
+}
+
+# Nudge Waybar to re-poll immediately instead of waiting out its interval.
+# Requires "signal": 8 on the module; harmless if not configured.
+hs_refresh_waybar() {
+    command -v pkill >/dev/null 2>&1 || return 0
+    pkill -RTMIN+8 waybar 2>/dev/null || true
+}
